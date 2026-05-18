@@ -34,7 +34,7 @@ def main() -> int:
         print(f"unexpected package path: {pkg_path!r}")
         return 1
 
-    if pkg_ver != "latest":
+    if pkg_ver != "v0.1.0":
         print(f"unexpected package version: {pkg_ver!r}")
         return 1
 
@@ -57,12 +57,17 @@ def main() -> int:
         return 1
 
     site = package.get("site", [])
-    if len(site) != 1 or site[0].get("version") != "latest":
-        print("unexpected site entries in package index json")
+    versions = {entry.get("version"): entry for entry in site}
+    if set(versions) != {"v0.1.0", "latest"}:
+        print(f"unexpected site versions: {sorted(versions)}")
         return 1
 
-    if site[0].get("VER_SHA") != "main":
-        print(f"unexpected latest VER_SHA: {site[0].get('VER_SHA')!r}")
+    if versions["v0.1.0"].get("VER_SHA") != "v0.1.0":
+        print(f"unexpected v0.1.0 VER_SHA: {versions['v0.1.0'].get('VER_SHA')!r}")
+        return 1
+
+    if versions["latest"].get("VER_SHA") != "main":
+        print(f"unexpected latest VER_SHA: {versions['latest'].get('VER_SHA')!r}")
         return 1
 
     print("env package index verification passed")
