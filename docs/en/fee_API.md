@@ -1,8 +1,8 @@
-# custom_fee Public API Guide
+# fee Public API Guide
 
 ## 1. Purpose
 
-This guide is for engineers who use `custom_fee` from application or adapter
+This guide is for engineers who use `fee` from application or adapter
 code. It focuses on public behavior rather than internal implementation detail.
 
 Use this guide to answer:
@@ -17,7 +17,7 @@ For the on-flash view of records, sectors, and checkpoints, see
 
 ## 2. Public surface
 
-The stable user-facing header is [fee_api.h](../../fee_api.h).
+The stable user-facing header is [fee_api.h](../../inc/fee_api.h).
 
 The currently visible public calls are:
 
@@ -202,9 +202,9 @@ full recovery is finished if checkpoint restore succeeded.
 ## 9. Minimal integration checklist
 
 1. Enable the component in [Kconfig](../../Kconfig).
-2. Include [fee_api.h](../../fee_api.h).
+2. Include [fee_api.h](../../inc/fee_api.h).
 3. Provide or integrate the project-specific flash port/backend layer.
-4. Define the block table in [fee_cfg.c](../../fee_cfg.c).
+4. Define the block table in [fee_cfg.c](../../src/fee_cfg.c).
 5. Call `fee_init()` during boot.
 6. Call `fee_mainfunction()` periodically.
 

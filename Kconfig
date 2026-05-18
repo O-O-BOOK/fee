@@ -1,11 +1,23 @@
-config COMPONENT_USING_CUSTOM_FEE
-    bool "using component custom fee"
+menuconfig PKG_USING_FEE
+    bool "fee: fixed-block Flash EEPROM emulation package"
     default n
+    help
+        Enable the fee package source tree directly from this repository.
 
-if COMPONENT_USING_CUSTOM_FEE
+if PKG_USING_FEE
 
-config CUSTOM_FEE_MOCK_FLASH_SIZE
+config FEE_MOCK_FLASH_SIZE
     hex "RAM mock flash size"
     default 0xA0000
+    help
+        Size of the built-in RAM-backed mock flash used by the default
+        weak flash driver implementation in port/fee_port.c.
+
+config FEE_USING_SAMPLE
+    bool "Enable samples"
+    default n
+    depends on RT_USING_FINSH
+    help
+        Build the MSH-based diagnostic sample in samples/sample_fee.c.
 
 endif

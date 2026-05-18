@@ -1,0 +1,5 @@
+menu "tools packages"
+
+source "$PKGS_DIR/packages/tools/fee/Kconfig"
+
+endmenu

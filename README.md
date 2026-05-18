@@ -1,111 +1,51 @@
-# custom_fee
+# fee
 
-`custom_fee` is a fixed-block Flash EEPROM Emulation (FEE) component for embedded
-systems. It targets deterministic block storage rather than a general-purpose KV
-database, with append-only writes, checkpoint-assisted boot recovery, and
-background garbage collection.
+`fee` is a fixed-block Flash EEPROM emulation package for RT-Thread. It
+focuses on deterministic logical-block storage, staged boot recovery, and
+background garbage collection instead of a general-purpose KV interface.
 
-## Implemented scope
+## Package layout
 
-The current source tree already contains the main control flow and data-model
-building blocks for the component:
+- `src/`: core FEE implementation and internal headers
+- `inc/`: public headers exposed to applications and adapters
+- `port/`: default weak flash-driver adapter and RAM-backed mock backend
+- `samples/`: optional MSH-based smoke and diagnostic sample
+- `docs/`: English and Chinese design and usage documents
+- `package-index/`: separate Env package-index payload for `RT-Thread/packages`
 
-- Public API entry points in [fee_api.h](./fee_api.h)
-  and [fee_api.c](./fee_api.c)
-- Request submission and foreground/background arbitration in
-  [fee_sched.c](./fee_sched.c)
-- Core read, write, invalidate, rollback, and record validation logic in
-  [fee_core.c](./fee_core.c)
-- RAM cache maintenance and checkpoint import/export in
-  [fee_cache.c](./fee_cache.c) and
-  [fee_ckpt.c](./fee_ckpt.c)
-- Boot recovery, checkpoint restore, tail scan, and interrupted-GC handling in
-  [fee_recovery.c](./fee_recovery.c)
-- Incremental garbage collection state handling in
-  [fee_gc.c](./fee_gc.c)
-- On-flash header, tail, and record helpers in
-  [fee_onflash.h](./fee_onflash.h) and
-  [fee_onflash.c](./fee_onflash.c)
-- Static block and lane configuration in
-  [fee_cfg.h](./fee_cfg.h) and
-  [fee_cfg.c](./fee_cfg.c)
+## Key files
 
-## Functional characteristics
+- Public API: [inc/fee_api.h](./inc/fee_api.h)
+- Block and lane configuration: [inc/fee_cfg.h](./inc/fee_cfg.h),
+  [src/fee_cfg.c](./src/fee_cfg.c)
+- Default port layer: [inc/fee_port.h](./inc/fee_port.h),
+  [inc/fee_flash_drv.h](./inc/fee_flash_drv.h),
+  [port/fee_port.c](./port/fee_port.c)
+- Optional sample: [samples/sample_fee.c](./samples/sample_fee.c)
+- Build integration: [Kconfig](./Kconfig), [SConscript](./SConscript)
+- Source metadata: [package.json](./package.json)
 
-At the component level, the current implementation is designed around these
-behaviors:
+## Functional summary
 
 - Block-oriented access by `block_id`
-- Synchronous reads plus queued writes, invalidates, and rollbacks
-- Current-copy and previous-copy tracking for rollback and tolerant recovery
-- RAM cache lookup after initialization instead of full media scans on every read
-- Checkpoint-based startup acceleration with staged initialization states
-- Lane-based isolation for fast, normal, and bulk traffic
-- Background GC and checkpoint work driven by `fee_mainfunction()`
-- Record-level commit markers and CRC validation for power-loss recovery
+- Synchronous reads plus queued write, invalidate, and rollback jobs
+- Current/previous copy tracking for rollback and tolerant recovery
+- RAM cache lookups after initialization
+- Checkpoint-assisted staged startup recovery
+- Lane separation for fast, normal, and bulk traffic
+- Background GC and checkpoint advancement in `fee_mainfunction()`
 
-## Public API
+## Documentation
 
-The user-facing API currently exposed by
-[fee_api.h](./fee_api.h) is:
+- Documentation index: [docs/README.md](./docs/README.md)
+- English set: [docs/en/README.md](./docs/en/README.md)
+- Chinese set: [docs/zh/README.md](./docs/zh/README.md)
+- Public API guide: [docs/en/fee_API.md](./docs/en/fee_API.md)
 
-```c
-fee_ret_t fee_init(void);
-fee_ret_t fee_read(uint16_t block_id, uint16_t offset, uint8_t *dst, uint16_t len);
-fee_ret_t fee_write(uint16_t block_id, const uint8_t *src, uint16_t len);
-fee_ret_t fee_invalidate(uint16_t block_id);
-fee_ret_t fee_get_status(uint16_t block_id, fee_block_status_t *status);
-fee_ret_t fee_rollback(uint16_t block_id);
-void fee_mainfunction(void);
+## Package index submission
 
-fee_status_t fee_get_memif_status(void);
-fee_job_result_t fee_get_job_result(void);
-fee_init_state_t fee_get_init_state(void);
-```
-
-## Directory layout
-
-- [doc/README.md](./doc/README.md): documentation index
-- [doc/en/README.md](./doc/en/README.md): English documents
-- [doc/zh/README.md](./doc/zh/README.md): Chinese documents
-- Source files in the repository root: API, scheduler, GC, recovery, cache,
-  checkpoint, on-flash format, and configuration modules
-- [Kconfig](./Kconfig) and
-  [SConscript](./SConscript): integration hooks
-
-## Documentation sets
-
-Two separated documentation sets are now provided:
-
-- English: [doc/en/README.md](./doc/en/README.md)
-- Chinese: [doc/zh/README.md](./doc/zh/README.md)
-
-Recommended entry points:
-
-- Architecture and redesign baseline:
-  [doc/en/fee_redesign.md](./doc/en/fee_redesign.md)
-- Public API and usage:
-  [doc/en/fee_API.md](./doc/en/fee_API.md)
-- Diagnostic test interpretation:
-  [doc/en/fee_diag_test.md](./doc/en/fee_diag_test.md)
-
-## Current repository status
-
-This repository snapshot is still an integration-oriented implementation set,
-not a production-complete drop-in release.
-
-- The core module logic and design documents are present.
-- The documentation references a `fee_port` adapter layer and test backends as
-  part of the intended integration model.
-- The corresponding adapter and test source files are not included in this
-  snapshot, so bring-up still requires project-side integration work.
-
-## Quick integration notes
-
-1. Configure the component in [Kconfig](./Kconfig).
-2. Define the block table and flash capabilities required by the target.
-3. Call `fee_init()` during boot.
-4. Drive `fee_mainfunction()` periodically.
-5. Treat `fee_write()`, `fee_invalidate()`, and `fee_rollback()` as queued jobs
-   and observe completion through status/job-result APIs.
+The repository also includes a standalone Env package-index mirror under
+[package-index](./package-index). That directory is meant to be copied or
+submitted to the `tools/fee` path of `RT-Thread/packages`; it is not
+used by the source build itself.
 

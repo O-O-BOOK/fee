@@ -1,14 +1,14 @@
 #include "fee_flash_drv.h"
 #include <string.h>
 
-#ifndef CUSTOM_FEE_MOCK_FLASH_SIZE
-#define CUSTOM_FEE_MOCK_FLASH_SIZE 0xA0000U
+#ifndef FEE_MOCK_FLASH_SIZE
+#define FEE_MOCK_FLASH_SIZE 0xA0000U
 #endif
 
-static uint8_t g_fee_mock_flash[CUSTOM_FEE_MOCK_FLASH_SIZE];
+static uint8_t g_fee_mock_flash[FEE_MOCK_FLASH_SIZE];
 static fee_flash_caps_t g_fee_mock_caps =
 {
-    CUSTOM_FEE_MOCK_FLASH_SIZE,
+    FEE_MOCK_FLASH_SIZE,
     1U,
     8U,
     0xE000U,

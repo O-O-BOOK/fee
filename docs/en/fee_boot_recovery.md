@@ -2,7 +2,7 @@
 
 ## 1. Purpose
 
-This document defines the boot recovery strategy for `custom_fee`.
+This document defines the boot recovery strategy for `fee`.
 
 It answers three questions:
 

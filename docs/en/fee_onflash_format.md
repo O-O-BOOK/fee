@@ -2,7 +2,7 @@
 
 ## 1. Purpose
 
-This document defines the persistent layout used by `custom_fee`:
+This document defines the persistent layout used by `fee`:
 
 - lane and sector organization
 - sector header format

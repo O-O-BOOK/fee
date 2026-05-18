@@ -1,8 +1,8 @@
-# custom_fee 对外 API 列表
+# fee 对外 API 列表
 
 ## 1. 这份文档解决什么问题
 
-这份文档面向 **使用 `custom_fee` 的工程师**，不是面向 FEE 内部维护者。
+这份文档面向 **使用 `fee` 的工程师**，不是面向 FEE 内部维护者。
 
 它回答四类问题：
 
@@ -17,7 +17,7 @@
 
 当前建议用户直接依赖的头文件只有：
 
-- [fee_api.h](../../fee_api.h)
+- [fee_api.h](../../inc/fee_api.h)
 
 不建议业务层直接调用的内部接口：
 
@@ -43,7 +43,7 @@ FEE 内部实现
 
 ### 2.1 功能特性
 
-这一节不是重复列 API 名字，而是说明当前这套 `custom_fee` 机制本身做了什么，以及这些能力在代码里分别落在哪些模块。
+这一节不是重复列 API 名字，而是说明当前这套 `fee` 机制本身做了什么，以及这些能力在代码里分别落在哪些模块。
 
 #### 2.1.1 RAM cache + 快速 block 查找
 
@@ -655,7 +655,7 @@ if (fee_init() == FEE_E_OK)
 
 启用：
 
-- `COMPONENT_USING_CUSTOM_FEE`
+- `PKG_USING_FEE`
 
 见 [Kconfig](../../Kconfig)。
 
@@ -751,11 +751,11 @@ if (fee_read(1U, 0U, cfg, sizeof(cfg)) == FEE_E_OK)
 
 不建议。
 
-业务层只应该通过 [fee_api.h](../../fee_api.h) 使用 FEE。
+业务层只应该通过 [fee_api.h](../../inc/fee_api.h) 使用 FEE。
 
 ## 11. 当前默认 block 配置示例
 
-当前示例配置在 [fee_cfg.c](../../fee_cfg.c)：
+当前示例配置在 [fee_cfg.c](../../src/fee_cfg.c)：
 
 | block_id | max_len | lane | rollback | boot_critical |
 | --- | --- | --- | --- | --- |
@@ -775,7 +775,7 @@ if (fee_read(1U, 0U, cfg, sizeof(cfg)) == FEE_E_OK)
 
 ### 12.1 配置业务 block
 
-当前 block 表在 [fee_cfg.c](../../fee_cfg.c) 的 `g_fee_block_table`。
+当前 block 表在 [fee_cfg.c](../../src/fee_cfg.c) 的 `g_fee_block_table`。
 
 你通常需要为每个业务块确定：
 
@@ -867,7 +867,7 @@ FEE 会根据这些参数做：
 
 对新项目建议按下面顺序推进：
 
-1. 先打开 `custom_fee` 组件，用默认 mock backend 跑通基础用例
+1. 先打开 `fee` 组件，用默认 mock backend 跑通基础用例
 2. 按业务需求整理 block 表
 3. 在应用层写最小读写封装
 4. 确保 `fee_mainfunction()` 已有稳定周期调用点
@@ -939,6 +939,6 @@ fee_ret_t app_fee_load_cfg(uint16_t block_id, uint8_t *data, uint16_t len)
 
 如果你只记三件事，记这三条：
 
-1. 用户接口只看 [fee_api.h](../../fee_api.h)
+1. 用户接口只看 [fee_api.h](../../inc/fee_api.h)
 2. `fee_read()` 是同步的，`fee_write()/invalidate()/rollback()` 是异步的
 3. 想让 FEE 真正工作起来，必须持续调用 `fee_mainfunction()`

@@ -1,0 +1,48 @@
+{
+  "name": "fee",
+  "description": "Fixed-block Flash EEPROM emulation component for RT-Thread",
+  "type": "rt-thread-component",
+  "dependencies": [
+    "PKG_USING_FEE"
+  ],
+  "defines": [],
+  "sources": [
+    {
+      "name": "src",
+      "dependencies": [],
+      "includes": [
+        "inc",
+        "src"
+      ],
+      "files": [
+        "src/*.c"
+      ]
+    },
+    {
+      "name": "port",
+      "dependencies": [],
+      "includes": [
+        "inc",
+        "src",
+        "port"
+      ],
+      "files": [
+        "port/*.c"
+      ]
+    },
+    {
+      "name": "samples",
+      "dependencies": [
+        "FEE_USING_SAMPLE"
+      ],
+      "includes": [
+        "inc",
+        "src",
+        "samples"
+      ],
+      "files": [
+        "samples/*.c"
+      ]
+    }
+  ]
+}

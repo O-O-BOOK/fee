@@ -1,8 +1,8 @@
-# custom_fee Diagnostic Test Guide
+# fee Diagnostic Test Guide
 
 ## 1. Purpose
 
-`custom_fee_diag_test` is intended for bring-up and inspection in a controlled
+`fee_diag_test` is intended for bring-up and inspection in a controlled
 environment such as QEMU plus a RAM-backed flash backend.
 
 The diagnostic flow should help verify:
@@ -24,8 +24,8 @@ project integration, but the sequence is usually:
 
 1. build the target
 2. boot the test image
-3. run the basic `custom_fee_test`
-4. run `custom_fee_diag_test`
+3. run the basic `fee_test`
+4. run `fee_diag_test`
 
 If the project uses QEMU, keep the flash backend configuration identical to the
 expected mock-flash geometry when collecting results.

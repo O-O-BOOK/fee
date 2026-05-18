@@ -1187,7 +1187,7 @@ MemIf_JobResultType fee_get_job_result(void);
 建议新实现放在独立目录，避免直接侵入现有 MCAL Fee：
 
 ```text
-software/rt-thread/components/custom_fee/
+software/rt-thread/components/fee/
   fee_api.c
   fee_sched.c
   fee_core.c

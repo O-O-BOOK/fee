@@ -1,8 +1,8 @@
-# custom_fee 诊断测试用例说明
+# fee 诊断测试用例说明
 
 ## 1. 目的
 
-`custom_fee_diag_test` 用于在 QEMU + RAM mock flash 环境下验证 `custom_fee` 的以下行为：
+`fee_diag_test` 用于在 QEMU + RAM mock flash 环境下验证 `fee` 的以下行为：
 
 - block 数据写入、读回、一致性校验
 - rollback / invalidate 功能
@@ -10,10 +10,10 @@
 - fast lane GC 触发时的耗时和底层驱动访问次数
 - checkpoint / sector / record 在 mock flash 中的实际落盘格式
 
-和 `custom_fee_test` 的区别：
+和 `fee_test` 的区别：
 
-- `custom_fee_test` 只做通过/失败判定
-- `custom_fee_diag_test` 额外打印数据内容、耗时、驱动访问统计、flash 布局和原始内存 dump
+- `fee_test` 只做通过/失败判定
+- `fee_diag_test` 额外打印数据内容、耗时、驱动访问统计、flash 布局和原始内存 dump
 
 ## 2. 执行命令
 
@@ -21,8 +21,8 @@
 
 ```powershell
 cmd /c "call C:\Work\InstallTools\env-windows\tools\bin\env-init.bat && scons -j8"
-powershell -NoProfile -ExecutionPolicy Bypass -File .\qemu_ps.ps1 -MshCommand custom_fee_test
-powershell -NoProfile -ExecutionPolicy Bypass -File .\qemu_ps.ps1 -MshCommand custom_fee_diag_test
+powershell -NoProfile -ExecutionPolicy Bypass -File .\qemu_ps.ps1 -MshCommand fee_test
+powershell -NoProfile -ExecutionPolicy Bypass -File .\qemu_ps.ps1 -MshCommand fee_diag_test
 ```
 
 ## 3. 用例覆盖范围
@@ -55,7 +55,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\qemu_ps.ps1 -MshCommand cu
 每个步骤会打印：
 
 ```text
-custom_fee_diag_test: write block1 fast_a time=0 ms ticks=0 wait_loops=1 driver[init=0 read=0/0B write=4/1208B erase=1/57344B poll=1]
+fee_diag_test: write block1 fast_a time=0 ms ticks=0 wait_loops=1 driver[init=0 read=0/0B write=4/1208B erase=1/57344B poll=1]
 ```
 
 字段含义：
@@ -75,7 +75,7 @@ custom_fee_diag_test: write block1 fast_a time=0 ms ticks=0 wait_loops=1 driver[
 GC 压测阶段会额外打印 fast lane 状态变化：
 
 ```text
-custom_fee_diag_test: gc_write[106] time=10 ms ticks=1 wait_loops=7 fast_lane[sector=0->2 gen=1->2 free=0x00029a40->0x00038440 gc=1] driver[read=4/1088B write=8/2360B erase=3/172032B poll=7]
+fee_diag_test: gc_write[106] time=10 ms ticks=1 wait_loops=7 fast_lane[sector=0->2 gen=1->2 free=0x00029a40->0x00038440 gc=1] driver[read=4/1088B write=8/2360B erase=3/172032B poll=7]
 ```
 
 字段含义：
@@ -92,7 +92,7 @@ custom_fee_diag_test: gc_write[106] time=10 ms ticks=1 wait_loops=7 fast_lane[se
 - GC 总结输出为：
 
 ```text
-custom_fee_diag_test: gc summary writes=160 total_time=1070 ms total_ticks=116 gc_events=1 gc_time=10 ms gc_ticks=1 gc_max_ticks=1
+fee_diag_test: gc summary writes=160 total_time=1070 ms total_ticks=116 gc_events=1 gc_time=10 ms gc_ticks=1 gc_max_ticks=1
 ```
 
 ## 5. Mock Flash 总体布局
@@ -104,7 +104,7 @@ QEMU 默认 RAM mock flash 参数：
 - 读粒度：`1`
 - 写粒度：`8`
 
-当前 `custom_fee` 实际使用 `10` 个 sector，总占用 `0x0008C000`，尾部 `0x00014000` 未使用。
+当前 `fee` 实际使用 `10` 个 sector，总占用 `0x0008C000`，尾部 `0x00014000` 未使用。
 
 ### 5.1 地址布局图
 
@@ -136,14 +136,14 @@ QEMU 默认 RAM mock flash 参数：
 
 ### 5.2 末态布局摘要
 
-来自一次 `custom_fee_diag_test` 样例：
+来自一次 `fee_diag_test` 样例：
 
 ```text
-custom_fee_diag_test: meta[0] base=0x00000000 valid=1 generation=165 entries=2 commit=0x434f4d4d
-custom_fee_diag_test: meta[1] base=0x0000e000 valid=1 generation=164 entries=2 commit=0x434f4d4d
-custom_fee_diag_test: lane=fast   range=[0x0001c000,0x00046000) active=2 dst=0 spare=0 free=0x0003f040
-custom_fee_diag_test: lane=normal range=[0x00046000,0x00070000) active=0 dst=1 spare=2 free=0x000460b0
-custom_fee_diag_test: lane=bulk   range=[0x00070000,0x0008c000) active=0 dst=1 spare=1 free=0x00070040
+fee_diag_test: meta[0] base=0x00000000 valid=1 generation=165 entries=2 commit=0x434f4d4d
+fee_diag_test: meta[1] base=0x0000e000 valid=1 generation=164 entries=2 commit=0x434f4d4d
+fee_diag_test: lane=fast   range=[0x0001c000,0x00046000) active=2 dst=0 spare=0 free=0x0003f040
+fee_diag_test: lane=normal range=[0x00046000,0x00070000) active=0 dst=1 spare=2 free=0x000460b0
+fee_diag_test: lane=bulk   range=[0x00070000,0x0008c000) active=0 dst=1 spare=1 free=0x00070040
 ```
 
 说明：
@@ -155,7 +155,7 @@ custom_fee_diag_test: lane=bulk   range=[0x00070000,0x0008c000) active=0 dst=1 s
 
 ### 5.3 先建立一个简单心智模型
 
-对新工程师来说，可以先把 `custom_fee` 想成三层：
+对新工程师来说，可以先把 `fee` 想成三层：
 
 ```text
 应用 block 读写
@@ -300,7 +300,7 @@ padding = 0
 很多新工程师第一次看这条统计会困惑：
 
 ```text
-custom_fee_diag_test: write block1 fast_a ... driver[write=4/1208B erase=1/57344B]
+fee_diag_test: write block1 fast_a ... driver[write=4/1208B erase=1/57344B]
 ```
 
 为什么明明只写了一个 block，却不是 `write=3`？
@@ -583,7 +583,7 @@ record_span =
 ### 7.1 活动 checkpoint 镜像
 
 ```text
-custom_fee_diag_test: meta active raw addr=0x00000000 len=64
+fee_diag_test: meta active raw addr=0x00000000 len=64
 0x00000000: 4b 43 45 46 00 01 00 00 a5 00 00 00 00 00 00 00
 0x00000010: 00 00 00 00 00 00 00 00 00 00 00 00 40 f0 03 00
 0x00000020: 02 00 00 00 02 00 00 03 00 00 00 00 b0 60 04 00
@@ -606,7 +606,7 @@ custom_fee_diag_test: meta active raw addr=0x00000000 len=64
 ### 7.2 Fast lane 活动 sector header
 
 ```text
-custom_fee_diag_test: sector raw addr=0x00038000 len=64
+fee_diag_test: sector raw addr=0x00038000 len=64
 0x00038000: 53 45 45 46 00 01 01 22 02 00 00 00 00 00 00 00
 0x00038010: 40 80 03 00 00 60 04 00 02 00 00 00 6a 80 24 00
 0x00038020: 4d 4d 4f 43 00 00 00 00 00 00 00 00 00 00 00 00
@@ -631,7 +631,7 @@ custom_fee_diag_test: sector raw addr=0x00038000 len=64
 record header:
 
 ```text
-custom_fee_diag_test: record header raw addr=0x00046040 len=32
+fee_diag_test: record header raw addr=0x00046040 len=32
 0x00046040: 52 45 45 46 02 00 d1 01 40 00 20 00 01 00 00 00
 0x00046050: 00 00 00 00 00 00 00 00 21 f7 a5 ae 00 00 00 00
 ```
@@ -639,7 +639,7 @@ custom_fee_diag_test: record header raw addr=0x00046040 len=32
 payload:
 
 ```text
-custom_fee_diag_test: record payload raw addr=0x00046060 len=64
+fee_diag_test: record payload raw addr=0x00046060 len=64
 0x00046060: 21 24 27 2a 2d 30 33 36 39 3c 3f 42 45 48 4b 4e
 0x00046070: 51 54 57 5a 5d 60 63 66 69 6c 6f 72 75 78 7b 7e
 0x00046080: 81 84 87 8a 8d 90 93 96 99 9c 9f a2 a5 a8 ab ae
@@ -649,7 +649,7 @@ custom_fee_diag_test: record payload raw addr=0x00046060 len=64
 tail:
 
 ```text
-custom_fee_diag_test: record tail raw addr=0x000460a0 len=16
+fee_diag_test: record tail raw addr=0x000460a0 len=16
 0x000460a0: 60 44 b0 0a 3e 69 7a 2e 00 00 00 00 4d 4d 4f 43
 ```
 
@@ -688,7 +688,7 @@ custom_fee_diag_test: record tail raw addr=0x000460a0 len=16
 
 ## 8. 结果解读建议
 
-看 `custom_fee_diag_test` 输出时，优先关注下面几点：
+看 `fee_diag_test` 输出时，优先关注下面几点：
 
 - block write/read 的数据内容是否和测试模式一致
 - `driver[...]` 是否符合预期
@@ -702,7 +702,7 @@ custom_fee_diag_test: record tail raw addr=0x000460a0 len=16
 
 基于当前 QEMU 样例：
 
-- `custom_fee_test` / `custom_fee_diag_test` 均通过
+- `fee_test` / `fee_diag_test` 均通过
 - block 1 / block 2 的写入、读回、回滚、重启恢复、失效场景均正确
 - fast lane 在 `gc_write[106]` 发生一次真实 GC
 - GC 后 fast lane 从 `sector 0` 切换到 `sector 2`

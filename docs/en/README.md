@@ -1,6 +1,6 @@
-# custom_fee English Documentation
+# fee English Documentation
 
-This directory contains the English documentation set for `custom_fee`.
+This directory contains the English documentation set for `fee`.
 
 ## Recommended reading order
 

@@ -2,7 +2,7 @@
 
 ## 1. Purpose
 
-This document defines the adapter boundary between `custom_fee` and a concrete
+This document defines the adapter boundary between `fee` and a concrete
 flash backend.
 
 Goals:

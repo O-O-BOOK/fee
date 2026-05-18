@@ -1,0 +1,15 @@
+import os
+from building import *
+
+cwd = GetCurrentDir()
+src = Glob('*.c')
+CPPPATH = [cwd, os.path.join(cwd, '..', 'inc'), os.path.join(cwd, '..', 'src')]
+
+group = DefineGroup(
+    'fee_samples',
+    src,
+    depend=['PKG_USING_FEE', 'FEE_USING_SAMPLE'],
+    CPPPATH=CPPPATH,
+)
+
+Return('group')

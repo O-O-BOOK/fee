@@ -2,7 +2,7 @@
 
 ## 1. Purpose
 
-This document describes the redesigned `custom_fee` architecture for fixed
+This document describes the redesigned `fee` architecture for fixed
 logical blocks stored in Data Flash. The redesign is intentionally optimized for
 predictable block access rather than generic key-value storage.
 
