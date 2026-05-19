@@ -10,3 +10,4 @@ Recommended entry points:
 - Architecture overview: [docs/en/fee_redesign.md](./en/fee_redesign.md)
 - Public API guide: [docs/en/fee_API.md](./en/fee_API.md)
 - Chinese API guide: [docs/zh/fee_API.md](./zh/fee_API.md)
+- Chinese package integration guide: [docs/zh/fee_package_integration.md](./zh/fee_package_integration.md)

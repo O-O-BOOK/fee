@@ -13,6 +13,7 @@
 7. [fee_cfg_rules.md](./fee_cfg_rules.md)
 8. [fee_port_adapter.md](./fee_port_adapter.md)
 9. [fee_diag_test.md](./fee_diag_test.md)
+10. [fee_package_integration.md](./fee_package_integration.md)
 
 ## 文档说明
 
@@ -25,3 +26,4 @@
 - `fee_cfg_rules.md`：block 配置、lane 映射和容量规划规则
 - `fee_port_adapter.md`：底层 flash 适配边界
 - `fee_diag_test.md`：诊断测试、dump 解读和性能观察
+- `fee_package_integration.md`：软件包索引提交、Env 下载和 BSP 集成步骤

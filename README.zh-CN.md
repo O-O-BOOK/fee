@@ -41,6 +41,7 @@
 - 中文文档：[docs/zh/README.md](./docs/zh/README.md)
 - 英文文档：[docs/en/README.md](./docs/en/README.md)
 - 对外 API 指南：[docs/zh/fee_API.md](./docs/zh/fee_API.md)
+- 软件包集成步骤：[docs/zh/fee_package_integration.md](./docs/zh/fee_package_integration.md)
 
 ## 软件包索引提交
 
